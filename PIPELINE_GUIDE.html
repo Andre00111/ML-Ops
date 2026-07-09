@@ -125,23 +125,28 @@
             background: #f0f0f0;
         }
 
-        .highlight {
-            background: #fffacd;
-            padding: 2px 4px;
-            border-radius: 2px;
+        .flow-diagram {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.3;
         }
 
-        .check {
-            color: #2ecc71;
-            font-weight: bold;
+        .job-detail {
+            background: #f0f8ff;
+            border-left: 4px solid #1f77b4;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
         }
 
-        .cross {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-
-        .warning {
+        .production-note {
             background: #fff3cd;
             border-left: 4px solid #ffc107;
             padding: 15px;
@@ -149,20 +154,9 @@
             border-radius: 4px;
         }
 
-        .info {
-            background: #d1ecf1;
-            border-left: 4px solid #0c5460;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 4px;
-        }
-
-        .success {
-            background: #d4edda;
-            border-left: 4px solid #155724;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 4px;
+        .page-break {
+            page-break-after: always;
+            margin-bottom: 40px;
         }
 
         ul, ol {
@@ -174,61 +168,12 @@
             margin-bottom: 8px;
         }
 
-        .comparison-table {
-            font-size: 0.85em;
-        }
-
-        .flow-diagram {
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 20px;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            overflow-x: auto;
-            white-space: pre;
-        }
-
-        .page-break {
-            page-break-after: always;
-            margin-bottom: 40px;
-        }
-
-        .toc {
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 4px;
-            margin: 20px 0;
-        }
-
-        .toc h3 {
-            margin-top: 0;
-        }
-
-        .toc ul {
-            list-style-type: none;
-            margin-left: 0;
-        }
-
-        .toc li {
-            padding: 5px 0;
-        }
-
-        .toc a {
-            color: #1f77b4;
-            text-decoration: none;
-        }
-
-        .toc a:hover {
-            text-decoration: underline;
-        }
-
         .duration {
-            background: #fff9e6;
+            background: #e8f4f8;
             padding: 5px 10px;
             border-radius: 3px;
             font-weight: bold;
+            color: #1f77b4;
         }
 
         .emoji {
@@ -236,20 +181,15 @@
             margin-right: 5px;
         }
 
-        .conclusion {
-            background: #e8f4f8;
-            border-left: 4px solid #1f77b4;
-            padding: 20px;
-            margin: 30px 0;
+        .total-time {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 15px;
             border-radius: 4px;
-        }
-
-        .next-steps {
-            background: #f0f8f5;
-            border-left: 4px solid #2ecc71;
-            padding: 20px;
-            margin: 30px 0;
-            border-radius: 4px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 20px 0;
         }
 
         @media print {
@@ -278,23 +218,12 @@
 <body>
     <div class="container">
         <h1>MLOps Pipeline Guide</h1>
-        <div class="subtitle">Deine aktuelle vs. echte Production Pipelines</div>
+        <div class="subtitle">Deine aktuelle Pipeline (Iris Classification mit GitHub Actions)</div>
 
-        <div class="toc">
-            <h3>📑 Inhaltsverzeichnis</h3>
-            <ul>
-                <li><a href="#section1">1. Deine aktuelle MLOps Pipeline</a></li>
-                <li><a href="#section2">2. Was in echten Production Pipelines zusätzlich kommt</a></li>
-                <li><a href="#section3">3. Conclusio: Wo du richtig bist</a></li>
-                <li><a href="#section4">4. Nächste Schritte für dich</a></li>
-            </ul>
-        </div>
+        <h2><span class="emoji">📊</span> Deine Pipeline im Detail</h2>
 
-        <div id="section1">
-            <h2><span class="emoji">📊</span> 1. Deine aktuelle MLOps Pipeline</h2>
-
-            <h3>Visual Flow</h3>
-            <div class="flow-diagram">┌──────────────────────────────────────────────────────────────┐
+        <h3>Visual Flow — Wie alles zusammenhängt</h3>
+        <div class="flow-diagram">┌──────────────────────────────────────────────────────────────┐
 │                     GIT PUSH / PR CREATED                    │
 └──────────────────────────────────────────────────────────────┘
                               ↓
@@ -302,458 +231,388 @@
                               ↓
         ┌─────────────────────────────────────────┐
         │    JOB 1: DETECT CHANGES                │
-        │    ─────────────────────────────────    │
-        │    • git diff prüfen                     │
-        │    • Hat sich train.py geändert?        │
-        │    • Output: should_train flag          │
         │    Duration: ~30 sec                     │
         └─────────────────────────────────────────┘
                               ↓
         ┌─────────────────────────────────────────┐
         │    JOB 2: TRAIN                         │
-        │    ─────────────────────────────────    │
-        │    • Setup Python 3.11                  │
-        │    • pip install requirements.txt       │
-        │    • python src/train.py                │
-        │    • Output: models/model.pkl           │
-        │    • Upload Artifact (30 days)          │
         │    Duration: ~1 min                      │
+        │    Output: models/model.pkl              │
         └─────────────────────────────────────────┘
                               ↓
         ┌─────────────────────────────────────────┐
         │    JOB 3: EVALUATE                      │
-        │    ─────────────────────────────────    │
-        │    • Download model.pkl                 │
-        │    • python src/evaluate.py             │
-        │    • Compute: Accuracy, Precision, F1  │
-        │    • Validate: Accuracy > 0.70?         │
-        │    • Output: results/metrics.json       │
         │    Duration: ~30 sec                     │
+        │    Output: results/metrics.json          │
         └─────────────────────────────────────────┘
                               ↓
         ┌─────────────────────────────────────────┐
         │    JOB 4: INFERENCE TEST                │
-        │    ─────────────────────────────────    │
-        │    • Download model.pkl                 │
-        │    • python src/inference.py            │
-        │    • Test 5 sample predictions          │
-        │    • Log results                        │
         │    Duration: ~20 sec                     │
         └─────────────────────────────────────────┘
                               ↓
         ┌─────────────────────────────────────────┐
         │    JOB 5: UNIT TESTS                    │
-        │    ─────────────────────────────────    │
-        │    • pytest tests/ -v                   │
-        │    • 5 tests total                      │
-        │    • All must pass                      │
         │    Duration: ~10 sec                     │
         └─────────────────────────────────────────┘
                               ↓
-                    ✓ All Jobs Passed!
-                              ↓
         ┌──────────────────────────────────────────┐
-        │  ✓ GitHub zeigt: All Checks Passed      │
-        │  ✓ Artifacts downloadbar (model, metrics)│
-        │  ✓ Ready für nächste Iteration          │
-        └──────────────────────────────────────────┘
+        │  ✓ All Jobs Passed!                     │
+        │  ✓ Model + Metrics in Artifacts         │
+        └──────────────────────────────────────────┘</div>
 
-Total Pipeline Duration: ~2 minutes
-            </div>
+        <div class="total-time">⏱️ Total Pipeline Duration: ~2 Minuten</div>
 
-            <h3>⏱️ Pipeline Zeiten Übersicht</h3>
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Job</th>
-                        <th>Duration</th>
-                        <th>Dependencies</th>
-                        <th>Critical?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Detect Changes</td>
-                        <td><span class="duration">~30 sec</span></td>
-                        <td>None</td>
-                        <td>No</td>
-                    </tr>
-                    <tr>
-                        <td>Train</td>
-                        <td><span class="duration">~1 min</span></td>
-                        <td>detect-changes</td>
-                        <td><span class="check">✓ YES</span></td>
-                    </tr>
-                    <tr>
-                        <td>Evaluate</td>
-                        <td><span class="duration">~30 sec</span></td>
-                        <td>train</td>
-                        <td><span class="check">✓ YES</span></td>
-                    </tr>
-                    <tr>
-                        <td>Inference Test</td>
-                        <td><span class="duration">~20 sec</span></td>
-                        <td>evaluate</td>
-                        <td>No</td>
-                    </tr>
-                    <tr>
-                        <td>Unit Tests</td>
-                        <td><span class="duration">~10 sec</span></td>
-                        <td>None</td>
-                        <td>No</td>
-                    </tr>
-                    <tr style="font-weight: bold; background: #e8f4f8;">
-                        <td><strong>Total</strong></td>
-                        <td><span class="duration">~2 min</span></td>
-                        <td>-</td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
+        <h3>Job-by-Job Breakdown</h3>
 
-            <div class="success">
-                <strong>✓ Success Kriterien:</strong>
-                <ul>
-                    <li>Training komplett</li>
-                    <li>Accuracy ≥ 0.70</li>
-                    <li>Alle 5 Unit Tests bestanden</li>
-                    <li>Inference läuft fehlerfrei</li>
-                    <li>Artifacts (model.pkl + metrics.json) hochgeladen</li>
-                </ul>
-            </div>
+        <h4>1️⃣ Job 1: Detect Changes</h4>
+        <div class="job-detail">
+            <p><strong>Zweck:</strong> Prüfe ob Training notwendig ist</p>
+            <p><strong>Was passiert:</strong></p>
+            <ul>
+                <li>Vergleiche Dateien mit dem letzten Commit</li>
+                <li>Suche nach Änderungen in: <code>src/train.py</code>, <code>src/evaluate.py</code>, <code>data/</code></li>
+                <li>Wenn Änderungen gefunden → <code>should_train=true</code></li>
+                <li>Wenn keine Änderungen → <code>should_train=false</code> (Training wird übersprungen)</li>
+            </ul>
+            <p><strong>Output:</strong> Flag für nächste Jobs</p>
+            <p><strong>Duration:</strong> <span class="duration">~30 sec</span></p>
+        </div>
+
+        <h4>2️⃣ Job 2: Train</h4>
+        <div class="job-detail">
+            <p><strong>Zweck:</strong> Trainiere das ML-Modell</p>
+            <p><strong>Abhängigkeiten:</strong> Wartet auf Job 1 (Detect Changes)</p>
+            <p><strong>Was passiert:</strong></p>
+            <pre><code>1. Checkout Code von GitHub
+2. Setup Python 3.11 Environment
+3. pip install -r requirements.txt
+   → scikit-learn, pandas, joblib, pytest, flask
+4. python src/train.py
+   → Lädt Iris Dataset (150 Samples)
+   → Teilt auf: 120 Training, 30 Test
+   → Trainiert Logistic Regression Modell
+   → Speichert zu: models/model.pkl
+5. GitHub Actions uploaded Artifact (30 Tage Speicher)</code></pre>
+            <p><strong>Output:</strong></p>
+            <pre><code>Model trained and saved to models/model.pkl
+Training set size: 120
+Test set size: 30
+✓ Success</code></pre>
+            <p><strong>Artifact:</strong> <code>model.pkl</code> (991 bytes)</p>
+            <p><strong>Duration:</strong> <span class="duration">~1 min</span></p>
+        </div>
+
+        <h4>3️⃣ Job 3: Evaluate</h4>
+        <div class="job-detail">
+            <p><strong>Zweck:</strong> Quality Gate — ist das Modell gut genug?</p>
+            <p><strong>Abhängigkeiten:</strong> Wartet auf Job 2 (Train)</p>
+            <p><strong>Was passiert:</strong></p>
+            <pre><code>1. Download model.pkl vom Artifact Storage
+2. python src/evaluate.py
+   → Lädt Iris Dataset mit gleicher 80/20 Aufteilung
+   → Lädt trainiertes Modell
+   → Evaluiert auf Test-Set (30 Samples)
+   → Berechnet Metriken:
+      - Accuracy: 1.0000 (100%)
+      - Precision pro Klasse: 1.0
+      - Recall pro Klasse: 1.0
+      - F1 pro Klasse: 1.0
+      - Confusion Matrix: Perfekt (keine Fehler)
+3. QUALITY GATE CHECK:
+   → Wenn Accuracy < 0.70 → JOB FAILS ❌
+   → Wenn Accuracy ≥ 0.70 → JOB PASSES ✓
+4. Speichert Metriken zu: results/metrics.json
+5. Uploaded Artifact</code></pre>
+            <p><strong>Output:</strong></p>
+            <pre><code>{
+  "accuracy": 1.0,
+  "precision": [1.0, 1.0, 1.0],
+  "recall": [1.0, 1.0, 1.0],
+  "f1": [1.0, 1.0, 1.0],
+  "confusion_matrix": [[10,0,0], [0,10,0], [0,0,10]]
+}</code></pre>
+            <p><strong>Artifact:</strong> <code>metrics.json</code></p>
+            <p><strong>Duration:</strong> <span class="duration">~30 sec</span></p>
+        </div>
+
+        <h4>4️⃣ Job 4: Inference Test</h4>
+        <div class="job-detail">
+            <p><strong>Zweck:</strong> Teste dass Modell Predictions machen kann</p>
+            <p><strong>Abhängigkeiten:</strong> Wartet auf Job 3 (Evaluate)</p>
+            <p><strong>Was passiert:</strong></p>
+            <pre><code>1. Download model.pkl vom Artifact Storage
+2. python src/inference.py
+   → Lädt trainiertes Modell
+   → Lädt Iris Dataset für Klassen-Namen
+   → Erstellt 5 Test-Samples:
+      Sample 1: [5.1, 3.5, 1.4, 0.2]
+      Sample 2: [7.0, 3.2, 4.7, 1.4]
+      Sample 3: [6.3, 2.5, 5.0, 2.0]
+      etc.
+   → Macht Predictions
+   → Mappt zu Klassennamen (setosa, versicolor, virginica)
+   → Gibt Predictions aus</code></pre>
+            <p><strong>Output:</strong></p>
+            <pre><code>Inference Results:
+--------------------------------------------------
+Sample 1: setosa (class 0)
+Sample 2: versicolor (class 1)
+Sample 3: virginica (class 2)
+Sample 4: setosa (class 0)
+Sample 5: versicolor (class 1)
+--------------------------------------------------
+✓ Inference test passed</code></pre>
+            <p><strong>Duration:</strong> <span class="duration">~20 sec</span></p>
+        </div>
+
+        <h4>5️⃣ Job 5: Unit Tests</h4>
+        <div class="job-detail">
+            <p><strong>Zweck:</strong> Sichere Code-Qualität ab</p>
+            <p><strong>Abhängigkeiten:</strong> Keine (läuft unabhängig)</p>
+            <p><strong>Was passiert:</strong></p>
+            <pre><code>pytest tests/ -v
+  → test_train.py::test_train_creates_model ✓
+     Prüft: wird model.pkl erstellt?
+  → test_train.py::test_model_is_valid ✓
+     Prüft: ist es ein LogisticRegression Modell?
+  → test_train.py::test_model_can_predict ✓
+     Prüft: kann das Modell Predictions machen?
+  → test_inference.py::test_inference_with_saved_model ✓
+     Prüft: funktioniert Batch-Inference?
+  → test_inference.py::test_inference_runs_without_error ✓
+     Prüft: läuft ohne Exceptions?</code></pre>
+            <p><strong>Output:</strong></p>
+            <pre><code>====== 5 passed in 2.34s ======</code></pre>
+            <p><strong>Duration:</strong> <span class="duration">~10 sec</span></p>
+        </div>
+
+        <h3>Pipeline Zeiten Übersicht</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Job</th>
+                    <th>Duration</th>
+                    <th>Abhängigkeiten</th>
+                    <th>Kritisch?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Detect Changes</td>
+                    <td><span class="duration">~30 sec</span></td>
+                    <td>None</td>
+                    <td>Nein</td>
+                </tr>
+                <tr>
+                    <td>Train</td>
+                    <td><span class="duration">~1 min</span></td>
+                    <td>Detect Changes</td>
+                    <td><strong>JA</strong></td>
+                </tr>
+                <tr>
+                    <td>Evaluate</td>
+                    <td><span class="duration">~30 sec</span></td>
+                    <td>Train</td>
+                    <td><strong>JA</strong> (Quality Gate)</td>
+                </tr>
+                <tr>
+                    <td>Inference Test</td>
+                    <td><span class="duration">~20 sec</span></td>
+                    <td>Evaluate</td>
+                    <td>Nein</td>
+                </tr>
+                <tr>
+                    <td>Unit Tests</td>
+                    <td><span class="duration">~10 sec</span></td>
+                    <td>None</td>
+                    <td>Nein</td>
+                </tr>
+                <tr style="font-weight: bold; background: #e8f4f8;">
+                    <td><strong>TOTAL</strong></td>
+                    <td><span class="duration">~2 Minuten</span></td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Was nach erfolgreicher Pipeline passiert</h3>
+        <div class="job-detail">
+            <p><strong>GitHub Actions Dashboard:</strong></p>
+            <ul>
+                <li>✅ Grünes Häkchen beim Commit (All Checks Passed)</li>
+                <li>⏱️ Zeigt gesamte Pipeline Duration (~2 min)</li>
+                <li>📊 Logs von jedem Job einsehbar</li>
+            </ul>
+            <p><strong>Artifacts downloadbar:</strong></p>
+            <ul>
+                <li><code>model.pkl</code> — das trainierte Modell (991 bytes)</li>
+                <li><code>metrics.json</code> — die Evaluations-Metriken</li>
+            </ul>
+            <p><strong>Nächste Iteration:</strong></p>
+            <ul>
+                <li>Du änderst <code>src/train.py</code> (bessere Features, andere Parameter)</li>
+                <li>Pushst zu GitHub</li>
+                <li>Pipeline läuft automatisch mit neuem Code</li>
+                <li>Neue Metriken sind sichtbar</li>
+                <li>Entscheidung: Merge oder nicht?</li>
+            </ul>
         </div>
 
         <div class="page-break"></div>
 
-        <div id="section2">
-            <h2><span class="emoji">📈</span> 2. Was in echten Production Pipelines ZUSÄTZLICH kommt</h2>
+        <h2><span class="emoji">⚡</span> Was in echten Production Pipelines ANDERS ist</h2>
 
-            <h3>Real-World Complexity</h3>
+        <p>Deine Pipeline hat die <strong>richtige Architektur</strong>. In echten Production Umgebungen wäre es hauptsächlich komplexer wegen:</p>
 
-            <h4><span class="emoji">🔍</span> A) DATA FETCHING (20-30% der Pipeline Zeit)</h4>
-            <div class="warning">
-                <strong>❌ Dein Projekt:</strong>
-                <pre><code>iris = datasets.load_iris()  # Geladen von sklearn
-X = iris.data  # 150 Samples
-y = iris.target</code></pre>
-            </div>
-
-            <div class="info">
-                <strong>✅ Real Production:</strong>
-                <pre><code>data = fetch_from_s3(
-    bucket='ml-data-prod',
-    path='user-events/2025-01-09/',
-    format='parquet',
-    partitions=['day', 'hour']
-)
-# Output: 500 GB Daten
-# Duration: 30-60 Minuten</code></pre>
-            </div>
-
-            <h4><span class="emoji">✔️</span> B) DATA VALIDATION (15-20% der Pipeline Zeit)</h4>
-            <div class="warning">
-                <strong>❌ Dein Projekt:</strong>
-                <pre><code>iris = datasets.load_iris()
-# Keine Validierung
-# Vertrau, dass sklearn Daten ok sind</code></pre>
-            </div>
-
-            <div class="info">
-                <strong>✅ Real Production:</strong>
-                <p>Mit 5+ verschiedenen Validierungsebenen:</p>
-                <ul>
-                    <li><strong>Schema Validation:</strong> Alle erwarteten Spalten da? Korrekte Datentypen?</li>
-                    <li><strong>Statistical Validation:</strong> Feature Ranges normal? Keine Outliers?</li>
-                    <li><strong>Data Quality Checks:</strong> Duplikate? Fehlende Werte? Konsistenz?</li>
-                    <li><strong>Data Leakage Detection:</strong> Leak ich Features? Zeitliche Konsistenz?</li>
-                    <li><strong>Drift Detection:</strong> Unterscheiden sich heutige Daten von letzter Woche?</li>
-                </ul>
-                <p><strong>Duration: 30-60 Minuten</strong></p>
-            </div>
-
-            <h4><span class="emoji">⚙️</span> C) FEATURE ENGINEERING (variable Zeit)</h4>
-            <div class="warning">
-                <strong>❌ Dein Projekt:</strong>
-                <pre><code>X = iris.data  # Nur Raw Features (4 Features)</code></pre>
-            </div>
-
-            <div class="info">
-                <strong>✅ Real Production:</strong>
-                <p>Generiere Hunderte Features automatisiert:</p>
-                <ul>
-                    <li>Raw features + Derived features (squared, log, rolling mean)</li>
-                    <li>Interaction features (combinations)</li>
-                    <li>Time-based features (day_of_week, hour_of_day)</li>
-                    <li>Domain-specific features (user segments, history)</li>
-                    <li><strong>Total: 500+ Features</strong></li>
-                </ul>
-                <p><strong>Duration: 30-120 Minuten</strong></p>
-            </div>
-
-            <h4><span class="emoji">🚀</span> D) TRAINING (variable Zeit, oft mit GPU)</h4>
-            <div class="warning">
-                <strong>❌ Dein Projekt:</strong>
-                <pre><code>model = LogisticRegression()
-model.fit(X_train, y_train)  # ~0.5 Sekunden</code></pre>
-            </div>
-
-            <div class="info">
-                <strong>✅ Real Production:</strong>
-                <p>Mit GPU und Hyperparameter Tuning:</p>
-                <ul>
-                    <li><strong>Hyperparameter Tuning:</strong> 100+ Kombinationen, 2-4 Stunden</li>
-                    <li><strong>Cross Validation:</strong> 5-Fold CV auf 5GB Data, 1-2 Stunden</li>
-                    <li><strong>Model Training:</strong> Final model mit GPU, 30 min - 2 hours</li>
-                    <li><strong>Feature Importance:</strong> SHAP values, 1 Stunde</li>
-                </ul>
-                <p><span class="highlight"><strong>Total Duration: 4-8 Stunden (!)</strong></span></p>
-            </div>
-
-            <h4><span class="emoji">📊</span> E) EVALUATION & TESTING (30-45 Minuten)</h4>
-            <div class="warning">
-                <strong>❌ Dein Projekt:</strong>
-                <pre><code>y_pred = model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)</code></pre>
-            </div>
-
-            <div class="info">
-                <strong>✅ Real Production:</strong>
-                <p>Mit 9 verschiedenen Testarten:</p>
-                <ol>
-                    <li>Standard Metrics (Accuracy, Precision, Recall, F1, AUC)</li>
-                    <li>Per-Segment Evaluation (funktioniert für alle User-Segmente?)</li>
-                    <li>Fairness Testing (funktioniert gleich für alle Gender/Location/Age?)</li>
-                    <li>Performance Regression (besser als v1.2?)</li>
-                    <li>Adversarial Testing (kann ich das Modell täuschen?)</li>
-                    <li>Robustness Testing (robust gegen noisy Input?)</li>
-                    <li>Latency Testing (Prediction Speed acceptable?)</li>
-                    <li>Inference Artifacts (kann ich das Modell laden?)</li>
-                </ol>
-                <p><strong>Duration: 30-45 Minuten</strong></p>
-            </div>
-
-            <h4><span class="emoji">📦</span> F) MODEL REGISTRY & VERSIONING (5-10 Minuten)</h4>
-            <div class="warning">
-                <strong>❌ Dein Projekt:</strong>
-                <pre><code>joblib.dump(model, 'models/model.pkl')
-# Keine Versionierung, keine Metadata</code></pre>
-            </div>
-
-            <div class="info">
-                <strong>✅ Real Production mit MLflow:</strong>
-                <ul>
-                    <li>Modell speichern mit Metadaten (Version, Tags, Metrics)</li>
-                    <li>Parameter tracking (alle Hyperparameter)</li>
-                    <li>Stage management ("staging", "production", "archived")</li>
-                    <li>Artifacts (model files, feature importance plots)</li>
-                </ul>
-                <p><strong>Duration: 5-10 Minuten</strong></p>
-            </div>
-
-            <h4><span class="emoji">🚢</span> G) DEPLOYMENT (Canary / A-B Testing) (20-30 Minuten)</h4>
-            <div class="warning">
-                <strong>❌ Dein Projekt:</strong>
-                <pre><code># Keine Deployment Pipeline</code></pre>
-            </div>
-
-            <div class="info">
-                <strong>✅ Real Production:</strong>
-                <ul>
-                    <li><strong>Deploy Staging:</strong> Test in echter Umgebung, 20 min</li>
-                    <li><strong>Deploy Canary:</strong> Nur 5% Traffic zu neuem Modell, 24h monitoring</li>
-                    <li><strong>Deploy Full:</strong> 100% Traffic wenn stabil</li>
-                </ul>
-                <p><strong>Duration: 30 Minuten - 24+ Stunden</strong></p>
-            </div>
-
-            <h4><span class="emoji">📈</span> H) MONITORING & ALERTING (Continuous)</h4>
-            <div class="warning">
-                <strong>❌ Dein Projekt:</strong>
-                <pre><code># Keine Monitoring
-# Niemand überwacht ob Modell noch gut läuft</code></pre>
-            </div>
-
-            <div class="info">
-                <strong>✅ Real Production Dashboard:</strong>
-                <ul>
-                    <li>Predictions/sec, Avg Latency, Error Rate</li>
-                    <li>Live Accuracy Tracking</li>
-                    <li>Data Drift Score, Feature Drift</li>
-                    <li>Automated Alerts (Slack, PagerDuty)</li>
-                    <li>Automatic Rollback wenn Accuracy fällt</li>
-                </ul>
-                <p><strong>Duration: 24/7 Continuous Monitoring</strong></p>
-            </div>
-
-            <h3>Comparison: Deine Pipeline vs. Real Production</h3>
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Phase</th>
-                        <th>Dein Projekt</th>
-                        <th>Real Production</th>
-                        <th>Zeit Increase</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Data Fetch</strong></td>
-                        <td>Inline (0 min)</td>
-                        <td>Separate Job</td>
-                        <td>+30-60 min</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Data Validation</strong></td>
-                        <td>None</td>
-                        <td>5 Checks</td>
-                        <td>+30-60 min</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Feature Engineering</strong></td>
-                        <td>None</td>
-                        <td>Auto-generated</td>
-                        <td>+30-120 min</td>
-                    </tr>
-                    <tr style="background: #fff3cd;">
-                        <td><strong>Training</strong></td>
-                        <td>1 sec</td>
-                        <td>4-8 Stunden</td>
-                        <td>+240-480 min</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Evaluation</strong></td>
-                        <td>30 sec</td>
-                        <td>9 Tests</td>
-                        <td>+30 min</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Model Registry</strong></td>
-                        <td>None</td>
-                        <td>MLflow</td>
-                        <td>+10 min</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Deploy Staging</strong></td>
-                        <td>None</td>
-                        <td>Full Testing</td>
-                        <td>+20 min</td>
-                    </tr>
-                    <tr style="background: #fff3cd;">
-                        <td><strong>Deploy Canary</strong></td>
-                        <td>None</td>
-                        <td>24h Monitoring</td>
-                        <td>+1440 min</td>
-                    </tr>
-                    <tr style="background: #d1ecf1;">
-                        <td><strong>Monitoring</strong></td>
-                        <td>None</td>
-                        <td>24/7</td>
-                        <td>Continuous</td>
-                    </tr>
-                    <tr style="font-weight: bold; background: #e8f4f8;">
-                        <td><strong>TOTAL</strong></td>
-                        <td><strong>~2 min</strong></td>
-                        <td><strong>8-12+ hours</strong></td>
-                        <td><strong>240-360x longer</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>💰 Cost Implications</h3>
-            <div class="warning">
-                <strong>Dein Projekt (GitHub Free Tier):</strong>
-                <pre><code>GitHub Actions: Free (2000 min/month)
-Storage: Free (Artifacts)
-Compute: Free (ubuntu-latest)
-Total: $0/month</code></pre>
-            </div>
-
-            <div class="info">
-                <strong>Real Production:</strong>
-                <pre><code>Data Storage (S3): $1000-5000/month
-Compute (GPU): $2000-10000/month (training)
-Monitoring (Datadog): $500-2000/month
-Model Registry: $500/month
-Kubernetes Cluster: $1000-5000/month
-Total: $5000-25000+/month</code></pre>
-            </div>
+        <h3>1. Daten-Magnitude</h3>
+        <div class="production-note">
+            <p><strong>Dein Projekt:</strong> 150 Samples (Iris Dataset)</p>
+            <p><strong>Production:</strong> Millionen bis Milliarden Samples</p>
+            <p><strong>Konsequenz:</strong> Data Fetching allein dauert 30-60 Minuten statt 0 Minuten</p>
         </div>
 
-        <div class="page-break"></div>
-
-        <div id="section3">
-            <h2><span class="emoji">✅</span> 3. Conclusio: Wo du richtig bist</h2>
-
-            <div class="conclusion">
-                <h3>Du hast die Architektur richtig verstanden</h3>
-                <p>Deine Pipeline folgt dem <strong>exakten Muster</strong> echter Production Pipelines:</p>
-                <pre><code>Data In → Validation → Training → Evaluation → Deployment → Monitoring</code></pre>
-                <p>Das ist <strong>nicht anders</strong> in echten Pipelines — nur dass jede Phase:</p>
-                <ul>
-                    <li>Mehr Zeit dauert (wegen mehr Daten)</li>
-                    <li>Mehr Checks hat (wegen Komplexität)</li>
-                    <li>Mehr Fehler haben kann (wegen Scale)</li>
-                </ul>
-            </div>
-
-            <div class="success">
-                <h3>Du hast verstanden, warum das wichtig ist</h3>
-                <ul>
-                    <li><strong>Reproducibility:</strong> Alles automatisiert ✓</li>
-                    <li><strong>Quality Gates:</strong> Nur gute Modelle deployen ✓</li>
-                    <li><strong>Safety Nets:</strong> Tests fangen Fehler ✓</li>
-                    <li><strong>Iteration:</strong> Schnell neue Versionen testen ✓</li>
-                </ul>
-            </div>
-
-            <div class="warning">
-                <h3>Was du noch nicht hast (und das ist OK)</h3>
-                <ul>
-                    <li><strong>Scale:</strong> Millionen vs. 150 Samples</li>
-                    <li><strong>Monitoring:</strong> 24/7 Alerts</li>
-                    <li><strong>Fairness/Bias Testing</strong></li>
-                    <li><strong>Data Validation</strong></li>
-                    <li><strong>Feature Engineering Automation</strong></li>
-                </ul>
-                <p><strong style="color: #d62728;">Aber die Architektur ist 100% solid!</strong></p>
-            </div>
+        <h3>2. Data Validation</h3>
+        <div class="production-note">
+            <p><strong>Dein Projekt:</strong> Keine Validierung (Schema ist garantiert ok)</p>
+            <p><strong>Production:</strong> 5+ Validierungsebenen (Schema, Stats, Quality, Leakage Detection, Drift)</p>
+            <p><strong>Konsequenz:</strong> +30-60 Minuten Pipeline Time</p>
         </div>
 
-        <div id="section4">
-            <h2><span class="emoji">🚀</span> 4. Nächste Schritte für dich</h2>
-
-            <div class="next-steps">
-                <h3>Falls du Zeit hast, füge hinzu:</h3>
-                <ol>
-                    <li><strong>Monitoring</strong> (2-3h)
-                        <ul>
-                            <li>Prometheus Exporter</li>
-                            <li>Grafana Dashboard</li>
-                            <li>Alerts wenn Accuracy fällt</li>
-                        </ul>
-                    </li>
-                    <li><strong>Data Validation</strong> (1-2h)
-                        <ul>
-                            <li>Pydantic Schema Validation</li>
-                            <li>Input Checks</li>
-                        </ul>
-                    </li>
-                    <li><strong>Docker + Kubernetes</strong> (später)
-                        <ul>
-                            <li>K8s Deployment Manifests</li>
-                            <li>Auto-scaling</li>
-                        </ul>
-                    </li>
-                </ol>
-            </div>
-
-            <h3>🎉 Glückwunsch!</h3>
-            <p>Du hast eine echte MLOps Pipeline gebaut. Die Konzepte sind gleich. Du bist nicht anfänger — du verstehst das System.</p>
-
-            <p style="margin-top: 40px; text-align: center; color: #666; font-style: italic;">
-                <strong>Dokumentiert mit ❤️ für dein Verständnis der MLOps</strong>
-            </p>
+        <h3>3. Training Komplexität</h3>
+        <div class="production-note">
+            <p><strong>Dein Projekt:</strong> Logistic Regression, 1 Sekunde Training</p>
+            <p><strong>Production:</strong> XGBoost/Deep Learning mit Hyperparameter Tuning (100+ Kombinationen), GPU, 4-8 Stunden Training</p>
+            <p><strong>Konsequenz:</strong> 240-480 Minuten länger (~360x)</p>
         </div>
+
+        <h3>4. Advanced Testing</h3>
+        <div class="production-note">
+            <p><strong>Dein Projekt:</strong> 5 Unit Tests</p>
+            <p><strong>Production:</strong> 9+ Tests (Fairness, Bias, Adversarial, Robustness, Latency, Regression, etc.)</p>
+            <p><strong>Konsequenz:</strong> +30-45 Minuten Pipeline Time</p>
+        </div>
+
+        <h3>5. Monitoring & Safety</h3>
+        <div class="production-note">
+            <p><strong>Dein Projekt:</strong> Keine Monitoring</p>
+            <p><strong>Production:</strong> 24/7 Monitoring, Automatic Alerts, Auto-Rollback wenn Modell degradiert</p>
+            <p><strong>Konsequenz:</strong> Continuous überwachen nach Deployment</p>
+        </div>
+
+        <h3>6. Deployment Strategy</h3>
+        <div class="production-note">
+            <p><strong>Dein Projekt:</strong> Deployment nicht implementiert</p>
+            <p><strong>Production:</strong> Canary Deployment (5% Traffic → 100% Traffic über 24 Stunden), mit Rollback Plan</p>
+            <p><strong>Konsequenz:</strong> +1440 Minuten für sichere Deployment</p>
+        </div>
+
+        <h3>Vergleich: Total Pipeline Duration</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Metrik</th>
+                    <th>Dein Projekt</th>
+                    <th>Production Umgebung</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Data Fetch</strong></td>
+                    <td>0 min</td>
+                    <td>30-60 min</td>
+                </tr>
+                <tr>
+                    <td><strong>Validation</strong></td>
+                    <td>0 min</td>
+                    <td>30-60 min</td>
+                </tr>
+                <tr>
+                    <td><strong>Training</strong></td>
+                    <td>1 sec</td>
+                    <td>4-8 hours</td>
+                </tr>
+                <tr>
+                    <td><strong>Testing</strong></td>
+                    <td>10 sec</td>
+                    <td>30-45 min</td>
+                </tr>
+                <tr>
+                    <td><strong>Deployment</strong></td>
+                    <td>N/A</td>
+                    <td>20 min - 24 hours</td>
+                </tr>
+                <tr>
+                    <td><strong>Monitoring</strong></td>
+                    <td>N/A</td>
+                    <td>24/7 Continuous</td>
+                </tr>
+                <tr style="font-weight: bold; background: #fff3cd;">
+                    <td><strong>TOTAL</strong></td>
+                    <td><span class="duration">~2 Minuten</span></td>
+                    <td><span class="duration">8-12+ Stunden (+ 24h Canary)</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Kosten-Vergleich</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Komponente</th>
+                    <th>Dein Projekt</th>
+                    <th>Production</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GitHub Actions</td>
+                    <td>Free (2000 min/month)</td>
+                    <td>$500-2000/month</td>
+                </tr>
+                <tr>
+                    <td>Data Storage (S3)</td>
+                    <td>Free</td>
+                    <td>$1000-5000/month</td>
+                </tr>
+                <tr>
+                    <td>Compute (GPU)</td>
+                    <td>Free</td>
+                    <td>$2000-10000/month</td>
+                </tr>
+                <tr>
+                    <td>Monitoring (Datadog)</td>
+                    <td>Free</td>
+                    <td>$500-2000/month</td>
+                </tr>
+                <tr>
+                    <td>Kubernetes</td>
+                    <td>Free</td>
+                    <td>$1000-5000/month</td>
+                </tr>
+                <tr style="font-weight: bold; background: #fff3cd;">
+                    <td><strong>TOTAL/MONTH</strong></td>
+                    <td><strong>$0</strong></td>
+                    <td><strong>$5000-25000+</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2><span class="emoji">✅</span> Bottom Line</h2>
+
+        <p style="font-size: 1.1em; margin-top: 30px;">
+            <strong>Du verstehst die Architektur 100% richtig.</strong> Deine Pipeline folgt dem exakten Muster echter Production Pipelines:
+        </p>
+        <pre><code>Data In → Validation → Training → Evaluation → Deployment → Monitoring</code></pre>
+
+        <p style="margin-top: 20px;">
+            Der einzige Unterschied: In Production ist jede Phase komplexer und dauert länger — nicht weil das Konzept falsch ist, sondern weil die <strong>Scale und Safety Requirements</strong> größer sind.
+        </p>
+
+        <p style="margin-top: 20px; text-align: center; color: #666; font-style: italic;">
+            <strong>Glückwunsch!</strong> Du hast eine echte MLOps Pipeline gebaut. 🎉
+        </p>
     </div>
 </body>
 </html>

@@ -1,0 +1,47 @@
+version: '3.8'
+
+# ★ MLOps Development Environment
+# Run: docker-compose up
+# Test: curl -X POST http://localhost:5000/predict -H "Content-Type: application/json" -d '{"sepal_length": 5.1, "sepal_width": 3.5, "petal_length": 1.4, "petal_width": 0.2}'
+
+services:
+  ml-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ml-ops-api
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - MODEL_PATH=/app/models/model.pkl
+    volumes:
+      - ./models:/app/models:ro
+      - ./results:/app/results:ro
+      - ./src:/app/src
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - ml-ops-network
+    restart: unless-stopped
+
+  # Optional: Redis for caching (future use)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: ml-ops-redis
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - ml-ops-network
+
+networks:
+  ml-ops-network:
+    driver: bridge
+
+volumes:
+  models:
+  results:

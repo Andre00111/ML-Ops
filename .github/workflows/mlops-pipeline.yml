@@ -1,0 +1,140 @@
+name: MLOps Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      should_train: ${{ steps.changes.outputs.should_train }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check for changes in training files
+        id: changes
+        run: |
+          if git diff --name-only origin/main...HEAD | grep -E '(src/train|src/evaluate|data/)'; then
+            echo "should_train=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_train=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+  train:
+    name: Train Model
+    needs: detect-changes
+    if: needs.detect-changes.outputs.should_train == 'true' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Train model
+        run: python src/train.py
+
+      - name: Upload model artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: model
+          path: models/model.pkl
+          retention-days: 30
+
+  evaluate:
+    name: Evaluate Model
+    needs: train
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Download model artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: model
+          path: models/
+
+      - name: Evaluate model
+        run: python src/evaluate.py
+
+      - name: Upload metrics artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: metrics
+          path: results/metrics.json
+          retention-days: 30
+
+  inference-test:
+    name: Test Inference
+    needs: evaluate
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Download model artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: model
+          path: models/
+        continue-on-error: true
+
+      - name: Test inference
+        run: python src/inference.py
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run pytest
+        run: pytest tests/ -v

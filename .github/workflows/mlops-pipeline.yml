@@ -29,8 +29,6 @@ jobs:
 
   train:
     name: Train Model
-    needs: detect-changes
-    if: needs.detect-changes.outputs.should_train == 'true' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -58,7 +56,8 @@ jobs:
 
   evaluate:
     name: Evaluate Model
-    needs: train
+    needs: [train]
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -92,7 +91,7 @@ jobs:
 
   inference-test:
     name: Test Inference
-    needs: evaluate
+    needs: [evaluate]
     if: always()
     runs-on: ubuntu-latest
     steps:
